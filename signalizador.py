@@ -13,11 +13,17 @@ def buscar_noticias(api_key):
         "kind": "news",
         "filter": "latest"
     }
+
+    # DEBUG: mostra a URL completa nos logs
+    print("📡 Requisição para:", url)
+    print("🔐 Token usado:", api_key)
+
     response = requests.get(url, params=params)
     if response.status_code == 200:
         data = response.json()
         return [item['title'] for item in data['results']]
     else:
+        print("❌ Erro na resposta:", response.status_code, response.text)
         return ["Erro ao buscar notícias. Verifique sua API key."]
 
 # ====================================
@@ -49,7 +55,7 @@ def obter_volatilidade_real():
         response = requests.get(url, params=params)
         dados = response.json()
 
-        precos = [p[1] for p in dados["prices"][-24:]]  # últimas ~2h
+        precos = [p[1] for p in dados["prices"][-24:]]
 
         if len(precos) < 2:
             return 0.0
@@ -99,7 +105,6 @@ def classificar_risco(sentimentos, volatilidade, volume):
         return "Cuidado - Mercado instável", "🟡"
     else:
         return "Seguro - Ambiente favorável", "🟢"
-
 
 
 
