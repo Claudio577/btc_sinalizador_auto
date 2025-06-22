@@ -9,7 +9,8 @@ from signalizador import (
     buscar_noticias,
     analisar_sentimentos,
     classificar_risco,
-    obter_volatilidade_real
+    obter_volatilidade_real,
+    obter_tendencia_btc
 )
 
 # Configurações do app
@@ -30,6 +31,7 @@ if api_key:
         noticias = buscar_noticias(api_key)
         sentimentos = analisar_sentimentos(noticias)
         volatilidade_real = obter_volatilidade_real()
+        tendencia_pct = obter_tendencia_btc()
         volume = len(sentimentos)
         mensagem, emoji = classificar_risco(sentimentos, volatilidade_real, volume)
 
@@ -50,6 +52,7 @@ if api_key:
     # Mostrar métricas abaixo do semáforo
     st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
     st.metric("Volatilidade Estimada", f"{volatilidade_real:.2%}")
+    st.metric("Tendência (2h)", f"{tendencia_pct*100:.2f}%")
     st.metric("Volume de Notícias", volume)
 
     # Mostrar as últimas notícias
@@ -58,4 +61,5 @@ if api_key:
         st.markdown(f"**{i:02d}.** {noticia}")
 else:
     st.info("Para começar, insira sua chave da API do CryptoPanic.")
+
 
