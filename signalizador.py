@@ -45,39 +45,46 @@ def analisar_sentimentos(noticias):
 def obter_volatilidade_real():
     try:
         url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
-        params = {"vs_currency": "usd", "days": "1", "interval": "hourly"}
+        params = {"vs_currency": "usd", "days": "2"}  # usando plano gratuito
         response = requests.get(url, params=params)
         dados = response.json()
 
-        precos = [p[1] for p in dados["prices"][-2:]]
+        precos = [p[1] for p in dados["prices"][-24:]]  # últimas ~2h
+
         if len(precos) < 2:
             return 0.0
 
         preco_max = max(precos)
         preco_min = min(precos)
         preco_medio = np.mean(precos)
-        return (preco_max - preco_min) / preco_medio
-    except:
+
+        volatilidade = (preco_max - preco_min) / preco_medio
+        return round(volatilidade, 4)
+    except Exception as e:
+        print("Erro na volatilidade:", e)
         return 0.0
 
 # ====================================
-# 4. Tendência de curto prazo
+# 4. Tendência de curto prazo (~2h)
 # ====================================
 def obter_tendencia_btc():
     try:
         url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
-        params = {"vs_currency": "usd", "days": "1", "interval": "hourly"}
+        params = {"vs_currency": "usd", "days": "2"}
         response = requests.get(url, params=params)
         dados = response.json()
 
-        precos = [p[1] for p in dados["prices"][-2:]]
+        precos = [p[1] for p in dados["prices"][-24:]]  # últimas ~2h
+
         if len(precos) < 2:
             return 0.0
 
         preco_inicial = precos[0]
         preco_final = precos[-1]
-        return (preco_final - preco_inicial) / preco_inicial
-    except:
+        variacao = (preco_final - preco_inicial) / preco_inicial
+        return round(variacao, 4)
+    except Exception as e:
+        print("Erro na tendência:", e)
         return 0.0
 
 # ====================================
@@ -92,5 +99,6 @@ def classificar_risco(sentimentos, volatilidade, volume):
         return "Cuidado - Mercado instável", "🟡"
     else:
         return "Seguro - Ambiente favorável", "🟢"
+
 
 
