@@ -1,7 +1,6 @@
 streamlit
-streamlit-autorefresh
+pandas
 numpy
-pillow
-requests
-requests
-
+Pillow
+matplotlib
+streamlit-autorefresh
