@@ -66,9 +66,9 @@ if api_key:
     col2.metric("📉 Volatilidade Estimada", f"{volatilidade_real:.2%}")
     col2.metric("📰 Volume de Notícias", volume)
 
-    # Mostrar últimas notícias
+    # Mostrar todas as notícias
     st.subheader("📰 Últimas Notícias")
-    for i, noticia in enumerate(noticias[:10], 1):
+    for i, noticia in enumerate(noticias, 1):  # agora mostra todas
         st.markdown(f"**{i:02d}.** {noticia}")
 
     # Salvar histórico do sinal
