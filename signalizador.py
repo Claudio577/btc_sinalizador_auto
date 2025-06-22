@@ -6,24 +6,20 @@ import re
 # 1. Buscar notícias da API
 # ============================
 def buscar_noticias(api_key):
-    url = "https://cryptopanic.com/api/developer/v1/posts/"
+    url = "https://cryptopanic.com/api/v1/posts/"
     params = {
         "auth_token": api_key,
         "currencies": "BTC",
         "kind": "news",
         "filter": "latest"
     }
-
-    # DEBUG: mostra a URL completa nos logs
-    print("📡 Requisição para:", url)
-    print("🔐 Token usado:", api_key)
-
     response = requests.get(url, params=params)
+    print("URL usada para CryptoPanic:", response.url)  # DEBUG opcional
     if response.status_code == 200:
         data = response.json()
         return [item['title'] for item in data['results']]
     else:
-        print("❌ Erro na resposta:", response.status_code, response.text)
+        print("Erro ao buscar notícias:", response.status_code, response.text)
         return ["Erro ao buscar notícias. Verifique sua API key."]
 
 # ====================================
@@ -55,7 +51,7 @@ def obter_volatilidade_real():
         response = requests.get(url, params=params)
         dados = response.json()
 
-        precos = [p[1] for p in dados["prices"][-24:]]
+        precos = [p[1] for p in dados["prices"][-24:]]  # últimas ~2h
 
         if len(precos) < 2:
             return 0.0
@@ -80,7 +76,7 @@ def obter_tendencia_btc():
         response = requests.get(url, params=params)
         dados = response.json()
 
-        precos = [p[1] for p in dados["prices"][-24:]]
+        precos = [p[1] for p in dados["prices"][-24:]]  # últimas ~2h
 
         if len(precos) < 2:
             return 0.0
@@ -105,6 +101,5 @@ def classificar_risco(sentimentos, volatilidade, volume):
         return "Cuidado - Mercado instável", "🟡"
     else:
         return "Seguro - Ambiente favorável", "🟢"
-
 
 
