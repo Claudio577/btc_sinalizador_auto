@@ -11,7 +11,7 @@ def buscar_noticias(api_key):
         "auth_token": api_key,
         "currencies": "BTC",
         "kind": "news",
-        "filter": "hot"  # 'latest' pode causar erro no plano gratuito
+        "public": "true"  # evita filtragem de resultados para usuários gratuitos
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
