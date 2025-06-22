@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 import pandas as pd
 from streamlit_autorefresh import st_autorefresh
-import os
+import matplotlib.pyplot as plt
 
 from signalizador import (
     buscar_noticias,
@@ -94,23 +94,21 @@ if api_key:
     for _, row in ultimos.iterrows():
         st.markdown(f"{row['emoji']} **{row['risco']}** - {row['timestamp']}")
 
-    # Gerar gráfico de tendência
+    # Gráfico de tendência
     try:
         emoji_map = {"🔴": 0, "🟡": 1, "🟢": 2}
         df_total["valor_risco"] = df_total["emoji"].map(emoji_map)
-        fig = df_total.tail(30).plot(
-            x="timestamp",
-            y="valor_risco",
-            kind="line",
-            title="Tendência dos Sinais",
-            figsize=(8, 3),
-            legend=False,
-            grid=True
-        ).get_figure()
-        grafico_path = "grafico_tendencia.png"
-        fig.tight_layout()
-        fig.savefig(grafico_path)
-        st.image(grafico_path, use_column_width=True)
+
+        fig, ax = plt.subplots(figsize=(8, 3))
+        ax.plot(df_total["timestamp"].tail(30), df_total["valor_risco"].tail(30), marker="o")
+        ax.set_title("Tendência dos Sinais")
+        ax.set_yticks([0, 1, 2])
+        ax.set_yticklabels(["🔴", "🟡", "🟢"])
+        ax.set_xticks(df_total["timestamp"].tail(30)[::5])  # reduz ticks
+        ax.tick_params(axis='x', rotation=45)
+        ax.grid(True)
+        plt.tight_layout()
+        st.image(fig, use_container_width=True)
     except Exception as e:
         st.error(f"Erro ao gerar gráfico: {e}")
 
