@@ -11,13 +11,12 @@ def buscar_noticias(api_key):
         "auth_token": api_key,
         "currencies": "BTC",
         "kind": "news",
-        "filter": "latest"
+        "filter": "hot"  # 'latest' pode causar erro no plano gratuito
     }
     response = requests.get(url, params=params)
-    print("URL usada para CryptoPanic:", response.url)  # DEBUG opcional
     if response.status_code == 200:
         data = response.json()
-        return [item['title'] for item in data['results']]
+        return [item['title'] for item in data.get('results', [])]
     else:
         print("Erro ao buscar notícias:", response.status_code, response.text)
         return ["Erro ao buscar notícias. Verifique sua API key."]
@@ -101,5 +100,6 @@ def classificar_risco(sentimentos, volatilidade, volume):
         return "Cuidado - Mercado instável", "🟡"
     else:
         return "Seguro - Ambiente favorável", "🟢"
+
 
 
