@@ -6,7 +6,7 @@ import re
 # 1. Buscar notícias da API
 # ============================
 def buscar_noticias(api_key):
-    url = "https://cryptopanic.com/api/v1/posts/"
+    url = "https://cryptopanic.com/api/developer/v1/posts/"
     params = {
         "auth_token": api_key,
         "currencies": "BTC",
@@ -45,7 +45,7 @@ def analisar_sentimentos(noticias):
 def obter_volatilidade_real():
     try:
         url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
-        params = {"vs_currency": "usd", "days": "2"}  # usando plano gratuito
+        params = {"vs_currency": "usd", "days": "2"}
         response = requests.get(url, params=params)
         dados = response.json()
 
@@ -74,7 +74,7 @@ def obter_tendencia_btc():
         response = requests.get(url, params=params)
         dados = response.json()
 
-        precos = [p[1] for p in dados["prices"][-24:]]  # últimas ~2h
+        precos = [p[1] for p in dados["prices"][-24:]]
 
         if len(precos) < 2:
             return 0.0
@@ -99,6 +99,7 @@ def classificar_risco(sentimentos, volatilidade, volume):
         return "Cuidado - Mercado instável", "🟡"
     else:
         return "Seguro - Ambiente favorável", "🟢"
+
 
 
 
