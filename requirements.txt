@@ -3,4 +3,5 @@ streamlit-autorefresh
 numpy
 pillow
 requests
+requests
 
