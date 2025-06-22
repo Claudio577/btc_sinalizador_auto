@@ -49,7 +49,18 @@ if api_key:
     image = Image.open(imagem_risco)
     st.image(image, caption="Status de Risco", use_container_width=True)
 
-    # Mostrar métricas abaixo do semáforo
+    # Mensagem educativa adaptada ao risco
+    st.subheader("📘 Orientação para você")
+    if "🔴" in emoji:
+        st.warning("Evite operar agora. Notícias negativas e mercado instável.")
+    elif "🟡" in emoji:
+        st.info("Cautela. Espere confirmação da tendência antes de operar.")
+    elif "🟢" in emoji:
+        st.success("Ambiente favorável. Operar com disciplina e gerenciamento.")
+    else:
+        st.info("Análise inconclusiva. Acompanhe novas atualizações.")
+
+    # Mostrar métricas abaixo da orientação
     st.metric("Sentimento Médio", f"{np.mean(sentimentos):.2f}")
     st.metric("Volatilidade Estimada", f"{volatilidade_real:.2%}")
     st.metric("Tendência (2h)", f"{tendencia_pct*100:.2f}%")
