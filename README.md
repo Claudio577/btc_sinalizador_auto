@@ -1,0 +1,1 @@
+# btc_sinalizador_auto
